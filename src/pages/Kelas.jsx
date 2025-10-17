@@ -213,7 +213,7 @@ export default function Kelas() {
                     <td className="py-2 px-4 flex justify-center gap-2">
                       <button
                         onClick={() => handleEdit(k)}
-                        className="bg-blue-500/80 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition w-full sm:w-auto"
+                        className="bg-blue-500/80 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition w-auto"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -228,7 +228,7 @@ export default function Kelas() {
                       </button>
                       <button
                         onClick={() => confirmDelete(k.id)}
-                        className="bg-red-500/80 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition w-full sm:w-auto"
+                        className="bg-red-500/80 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition w-auto"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
