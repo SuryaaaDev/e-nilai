@@ -47,7 +47,7 @@ export default function Sidebar() {
           </span>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="md:flex-1 p-4 space-y-1">
           {menus.map((menu) => (
             <Link
               key={menu.path}
