@@ -26,9 +26,9 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="hidden md:flex flex-col h-screen w-64 bg-gradient-to-b from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-r border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.3)] fixed left-0 top-0 text-slate-200">
-        <div className="p-6 border-b border-white/10 flex items-center gap-3">
-          <div className="w-10 h-10 bg-sky-500/20 border border-sky-400/30 rounded-xl flex items-center justify-center">
+      <div className="flex flex-col h-screen bg-gradient-to-b from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-r border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.3)] fixed left-0 top-0 text-slate-200 transition-all duration-300 w-20 md:w-64 z-50">
+        <div className="p-6 border-b border-white/10 flex items-center gap-0 md:gap-3 justify-center md:justify-start">
+          <div className="w-10 h-10 px-2 md:px-0 bg-sky-500/20 border border-sky-400/30 rounded-xl flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-5 h-5 text-sky-400"
@@ -42,7 +42,7 @@ export default function Sidebar() {
               ></path>
             </svg>
           </div>
-          <span className="text-xl font-semibold text-sky-400 tracking-wide">
+          <span className="text-xl font-semibold text-sky-400 tracking-wide hidden md:block">
             E-Nilai
           </span>
         </div>
@@ -52,7 +52,7 @@ export default function Sidebar() {
             <Link
               key={menu.path}
               to={menu.path}
-              className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${
                 location.pathname === menu.path
                   ? "bg-sky-500/20 text-sky-400 border border-sky-400/20 shadow-sm"
                   : "hover:bg-white/5 hover:text-white text-slate-300"
@@ -65,7 +65,7 @@ export default function Sidebar() {
                     : "text-slate-400"
                 }`}
               />
-              <span>{menu.name}</span>
+              <span className="hidden md:block">{menu.name}</span>
             </Link>
           ))}
         </nav>
@@ -73,37 +73,15 @@ export default function Sidebar() {
         <div className="p-4 border-t border-white/10">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-2 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all"
+            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all"
           >
             <LogoutIcon className="w-5 h-5" />
-            <span>Logout</span>
+            <span className="hidden md:block">Logout</span>
           </button>
         </div>
       </div>
 
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-slate-900/80 backdrop-blur-xl border-t border-white/10 text-slate-200 shadow-2xl flex justify-around py-2 z-50">
-        {menus.map((menu) => (
-          <Link
-            key={menu.path}
-            to={menu.path}
-            className={`flex flex-col items-center gap-1 text-xs transition ${
-              location.pathname === menu.path
-                ? "text-sky-400 font-semibold"
-                : "opacity-70 hover:opacity-100"
-            }`}
-          >
-            <menu.icon className="w-6 h-6" />
-            {menu.name}
-          </Link>
-        ))}
-        <button
-          onClick={handleLogout}
-          className="flex flex-col items-center gap-1 text-xs opacity-70 hover:opacity-100 text-red-400"
-        >
-          <LogoutIcon className="w-6 h-6" />
-          Logout
-        </button>
-      </div>
+      <div className="w-64 md:w-20"></div>
     </>
   );
 }
