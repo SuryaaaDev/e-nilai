@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import LayoutAdmin from "./components/LayoutAdmin";
 import LayoutTeacher from "./components/LayoutTeacher";
@@ -23,7 +23,6 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        {/* ADMIN ROUTES */}
         <Route
           path="/admin"
           element={
@@ -41,7 +40,6 @@ export default function App() {
           <Route path="teacher-classes" element={<TeacherClasses />} />
         </Route>
 
-        {/* TEACHER ROUTES */}
         <Route
           path="/teacher"
           element={
@@ -55,6 +53,8 @@ export default function App() {
           <Route path="classes/:id" element={<TeacherClassDetail />} />
           <Route path="profile" element={<TeacherProfile />} />
         </Route>
+
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
