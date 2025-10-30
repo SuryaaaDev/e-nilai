@@ -1,67 +1,61 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Students from "./pages/Siswa";
-import Classes from "./pages/Kelas";
-import StudentScore from "./pages/NilaiSiswa";
-import Layout from "./components/Layout";
+import LayoutAdmin from "./components/LayoutAdmin";
+import LayoutTeacher from "./components/LayoutTeacher";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
+import AdminDashboard from "./pages/admin/Dashboard";
+import Kelas from "./pages/admin/Classes";
+import Students from "./pages/admin/Students";
+import Majors from "./pages/admin/Majors";
+import Teachers from "./pages/admin/Teachers";
+import TeacherClasses from "./pages/admin/TeacherClasses";
+import Subjects from "./pages/admin/Subjects";
+
+import TeacherDashboard from "./pages/teacher/Dashboard";
+import NilaiSiswa from "./pages/teacher/NilaiSiswa";
+import TeacherClassDetail from "./pages/teacher/TeacherClassDetail";
+import TeacherProfile from "./pages/teacher/TeacherProfile";
+
+export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
 
+        {/* ADMIN ROUTES */}
         <Route
-          path="/dashboard"
+          path="/admin"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <LayoutAdmin />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="classes" element={<Kelas />} />
+          <Route path="students" element={<Students />} />
+          <Route path="majors" element={<Majors />} />
+          <Route path="teachers" element={<Teachers />} />
+          <Route path="subjects" element={<Subjects />} />
+          <Route path="teacher-classes" element={<TeacherClasses />} />
+        </Route>
 
+        {/* TEACHER ROUTES */}
         <Route
-          path="/students"
+          path="/teacher"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <Students />
-              </Layout>
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <LayoutTeacher />
             </ProtectedRoute>
           }
-        />
-        
-        <Route
-          path="/classes"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Classes />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/grades"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <StudentScore />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Default redirect */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        >
+          <Route path="dashboard" element={<TeacherDashboard />} />
+          <Route path="scores" element={<NilaiSiswa />} />
+          <Route path="classes/:id" element={<TeacherClassDetail />} />
+          <Route path="profile" element={<TeacherProfile />} />
+        </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
-
-export default App;

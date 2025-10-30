@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, CheckCircle } from "lucide-react";
-import API from "../services/api";
+import API from "../../services/api";
 
-export default function Siswa() {
+export default function Students() {
   const [siswa, setSiswa] = useState([]);
-  const [emailError, setEmailError] = useState("");
   const [classes, setClasses] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -12,7 +11,6 @@ export default function Siswa() {
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
   const [classId, setClassId] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -21,31 +19,25 @@ export default function Siswa() {
   const fetchSiswa = async () => {
     try {
       const res = await API.get("/students");
-      setSiswa(res.data);
+      const data = Array.isArray(res.data.data) ? res.data.data : [];
+      setSiswa(data);
       setError(null);
-    } catch {
+    } catch (err) {
+      console.error("Error fetch siswa:", err);
       setError("Gagal memuat data siswa. Silakan coba lagi.");
-    }
-  };
-
-  const handleEmailChange = (e) => {
-    const val = e.target.value;
-    setEmail(val);
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (val && !emailRegex.test(val)) {
-      setEmailError("Format email salah");
-    } else {
-      setEmailError("");
     }
   };
 
   const fetchClasses = async () => {
     try {
       const res = await API.get("/classes");
-      setClasses(res.data);
-    } catch {
-      setError("Gagal memuat data kelas. Silakan refresh halaman.");
+      const data = Array.isArray(res.data.data)
+        ? res.data.data
+        : res.data.classes || [];
+      setClasses(data);
+    } catch (err) {
+      console.error("Error fetch kelas:", err);
+      setError("Gagal memuat data kelas.");
     }
   };
 
@@ -59,13 +51,11 @@ export default function Siswa() {
     setNama("");
     setEmail("");
     setClassId("");
-    setUsername("");
     setPassword("");
     setIsEditing(false);
     setEditId(null);
   };
 
-  // ✅ fungsi menampilkan notifikasi sukses sementara
   const showSuccess = (msg) => {
     setSuccess(msg);
     setTimeout(() => setSuccess(null), 2500);
@@ -73,38 +63,51 @@ export default function Siswa() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isEditing) {
+      if (!nis || !nama || !classId) {
+        setError("NIS, Nama, dan Kelas wajib diisi saat edit.");
+        return;
+      }
+    } else {
+      if (!nis || !nama || !email || !password || !classId) {
+        setError("Semua field wajib diisi saat menambah siswa.");
+        return;
+      }
+    }
+
     try {
       if (isEditing) {
         await API.put(`/students/${editId}`, {
           nis,
           name: nama,
-          email,
           class_id: classId,
-          username,
-          password,
+          email,
         });
         showSuccess("Data siswa berhasil diperbarui!");
       } else {
-        const resUser = await API.post("/register", {
-          username,
-          password,
-          role: "student",
-        });
-        const userId = resUser.data.user.id;
         await API.post("/students", {
           nis,
           name: nama,
           email,
+          password,
           class_id: classId,
-          user_id: userId,
         });
         showSuccess("Siswa berhasil ditambahkan!");
       }
+
       resetForm();
       fetchSiswa();
       setError(null);
-    } catch {
-      setError("Gagal menyimpan data siswa. Periksa input dan coba lagi.");
+    } catch (err) {
+      console.error(
+        "❌ Error saat menyimpan siswa:",
+        err.response?.data || err
+      );
+      const msg =
+        err.response?.data?.message ||
+        "Gagal menyimpan data siswa. Periksa input dan coba lagi.";
+      setError(msg);
     }
   };
 
@@ -129,9 +132,8 @@ export default function Siswa() {
     setEditId(s.id);
     setNis(s.nis);
     setNama(s.name);
-    setEmail(s.email);
-    setClassId(s.class_id || "");
-    setUsername(s.user?.username || "");
+    setEmail(s.user?.email || "");
+    setClassId(s.class?.id || "");
     setPassword("");
   };
 
@@ -205,7 +207,7 @@ export default function Siswa() {
             placeholder="NIS"
             value={nis}
             onChange={(e) => setNis(e.target.value)}
-            className="bg-slate-800/50 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
+            className="bg-slate-800 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
             required
           />
           <input
@@ -223,27 +225,32 @@ export default function Siswa() {
                 .join(" ");
               setNama(capitalized);
             }}
-            className="bg-slate-800/50 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
+            className="bg-slate-800 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
             required
           />
-          <div className="flex flex-col">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={handleEmailChange}
-              className="bg-slate-800/50 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none truncate"
-              required
-            />
-            {emailError && (
-              <p className="text-red-400 text-sm mt-1">{emailError}</p>
-            )}
-          </div>
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-slate-800 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="bg-slate-800 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
+            required={!isEditing}
+          />
 
           <select
             value={classId}
             onChange={(e) => setClassId(e.target.value)}
-            className="bg-slate-800/50 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none h-10"
+            className="bg-slate-800 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
             required
           >
             <option value="" disabled>
@@ -251,26 +258,10 @@ export default function Siswa() {
             </option>
             {classes.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.name}
+                {c.name} {c.major?.abbreviation || "-"} {c.group_name}
               </option>
             ))}
           </select>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="bg-slate-800/50 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none truncate"
-            required={!isEditing}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="bg-slate-800/50 border border-white/10 text-slate-100 px-4 py-2 rounded-xl focus:border-sky-400 focus:ring-2 focus:ring-sky-400 outline-none"
-            required={!isEditing}
-          />
 
           <div className="sm:col-span-2 flex justify-end gap-3 mt-3 flex-wrap">
             {isEditing && (
@@ -308,7 +299,6 @@ export default function Siswa() {
                 <th className="py-2 px-4">Nama</th>
                 <th className="py-2 px-4">Email</th>
                 <th className="py-2 px-4">Kelas</th>
-                <th className="py-2 px-4">Username</th>
                 <th className="py-2 px-4 text-center">Aksi</th>
               </tr>
             </thead>
@@ -319,19 +309,20 @@ export default function Siswa() {
                     key={s.id}
                     className="border-b border-white/10 hover:bg-sky-500/10 transition"
                   >
-                    <td className="py-2 px-4 truncate">{s.nis}</td>
-                    <td className="py-2 px-4 truncate">{s.name}</td>
-                    <td className="py-2 px-4 truncate">{s.email}</td>
-                    <td className="py-2 px-4 truncate">
-                      {s.class?.name || "-"}
-                    </td>
-                    <td className="py-2 px-4 truncate">
-                      {s.user?.username || "-"}
+                    <td className="py-2 px-4">{s.nis}</td>
+                    <td className="py-2 px-4">{s.name}</td>
+                    <td className="py-2 px-4">{s.user?.email || "-"}</td>
+                    <td className="py-2 px-4">
+                      {s.class
+                        ? `${s.class.name || ""} ${
+                            s.class.major?.abbreviation || ""
+                          } ${s.class.group_name || ""}`.trim()
+                        : "-"}
                     </td>
                     <td className="py-2 px-4 flex justify-center gap-2">
                       <button
                         onClick={() => handleEdit(s)}
-                        className="bg-blue-500/80 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition w-full sm:w-auto"
+                        className="bg-blue-500/80 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -346,7 +337,7 @@ export default function Siswa() {
                       </button>
                       <button
                         onClick={() => confirmDelete(s.id)}
-                        className="bg-red-500/80 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition w-full sm:w-auto"
+                        className="bg-red-500/80 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -368,7 +359,10 @@ export default function Siswa() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="py-4 text-center text-slate-400">
+                  <td
+                    colSpan="5"
+                    className="py-4 text-center text-slate-400 italic"
+                  >
                     Belum ada data siswa
                   </td>
                 </tr>

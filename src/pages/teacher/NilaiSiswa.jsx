@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
-import API from "../services/api";
+import API from "../../services/api";
 
 export default function NilaiSiswa() {
   const [nilai, setNilai] = useState([]);
@@ -250,7 +250,6 @@ export default function NilaiSiswa() {
         </form>
       </div>
 
-      {/* 📋 Table */}
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-lg backdrop-blur-xl w-full max-w-6xl mx-auto">
         <h3 className="text-lg font-semibold mb-4 text-slate-300">
           Daftar Nilai
@@ -327,7 +326,6 @@ export default function NilaiSiswa() {
         </div>
       </div>
 
-      {/* 🧨 Modal Konfirmasi Hapus */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-slate-800 border border-slate-600 rounded-2xl p-6 w-80 text-center shadow-xl">

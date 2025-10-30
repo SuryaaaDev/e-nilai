@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toasts, setToasts] = useState([]);
   const navigate = useNavigate();
@@ -11,14 +11,36 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/login", { username, password });
-      localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      const res = await API.post("/login", { email, password });
+
+      // ✅ Ambil semua data dari response
+      const { token, role, user } = res.data;
+
+      // ✅ Simpan ke localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: role,
+        })
+      );
+
+      // ✅ Arahkan ke dashboard sesuai role
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (role === "teacher") {
+        navigate("/teacher/dashboard");
+      } else {
+        navigate("/login");
+      }
     } catch {
       const id = Date.now();
       setToasts((prev) => [
         ...prev,
-        { id, message: "Username atau password salah!" },
+        { id, message: "Email atau password salah!" },
       ]);
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -29,22 +51,21 @@ export default function Login() {
   return (
     <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen flex items-center justify-center text-slate-100 relative overflow-hidden px-4">
       <div className="relative z-10 bg-white/5 backdrop-blur-xl p-10 rounded-2xl shadow-2xl border border-white/10 w-full max-w-lg text-center">
-
         <h1 className="text-3xl font-bold text-sky-400 mb-2">Login E-Nilai</h1>
         <p className="text-slate-400 mb-6 text-sm">
-          Masukkan username dan password Anda
+          Masukkan email dan password Anda
         </p>
 
         <form onSubmit={handleLogin} className="space-y-5 text-left">
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-1">
-              Username
+              Email
             </label>
             <input
-              type="text"
-              placeholder="Masukkan username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              placeholder="Masukkan email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition"
               required
             />

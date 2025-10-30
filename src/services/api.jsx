@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://nilai.vortech.my.id/api", // ganti sesuai backend kamu
+  baseURL: "http://localhost:5000/api",
 });
 
 API.interceptors.request.use((config) => {
