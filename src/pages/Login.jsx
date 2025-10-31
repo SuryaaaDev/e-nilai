@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
+import { Mail, Lock } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -13,10 +14,8 @@ export default function Login() {
     try {
       const res = await API.post("/login", { email, password });
 
-      // ✅ Ambil semua data dari response
       const { token, role, user } = res.data;
 
-      // ✅ Simpan ke localStorage
       localStorage.setItem("token", token);
       localStorage.setItem(
         "user",
@@ -28,7 +27,6 @@ export default function Login() {
         })
       );
 
-      // ✅ Arahkan ke dashboard sesuai role
       if (role === "admin") {
         navigate("/admin/dashboard");
       } else if (role === "teacher") {
@@ -61,28 +59,34 @@ export default function Login() {
             <label className="block text-sm font-medium text-slate-400 mb-1">
               Email
             </label>
-            <input
-              type="email"
-              placeholder="Masukkan email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition"
-              required
-            />
+            <div className="flex items-center w-full px-2 py-1 rounded-xl bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition">
+              <Mail className="w-5 h-5 ml-3 text-slate-400" />
+              <input
+                type="email"
+                placeholder="Masukkan email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 bg-transparent text-slate-100 px-3 py-2 focus:outline-none"
+                required
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-1">
               Password
             </label>
-            <input
-              type="password"
-              placeholder="Masukkan password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition"
-              required
-            />
+            <div className="flex items-center w-full px-2 py-1 rounded-xl bg-slate-800/50 border border-white/10 text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition">
+              <Lock className="w-5 h-5 ml-3 text-slate-400" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Masukkan password"
+                className="flex-1 bg-transparent text-slate-100 px-3 py-2 focus:outline-none"
+                required
+              />
+            </div>
           </div>
 
           <button

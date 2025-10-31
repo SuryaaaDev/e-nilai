@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   BookOpen,
-  UserPlus,
+  CirclePlus,
   CheckCircle2,
   XCircle,
   FileInput,
@@ -106,7 +106,7 @@ export default function TeacherClassDetail() {
     <div className="min-h-screen w-full text-slate-100">
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-sky-400 mb-2 flex items-center gap-3">
-          <BookOpen className="w-7 h-7 text-sky-400" />
+          <BookOpen className="w-7 h-7 text-sky-400 hidden sm:block" />
           {subject?.name || "Mata Pelajaran"} —{" "}
           {kelas?.name || "Kelas Tidak Diketahui"}{" "}
           {kelas?.major?.abbreviation || ""} {kelas?.group_name}
@@ -159,15 +159,15 @@ export default function TeacherClassDetail() {
       )}
 
       {activeTab === "input" ? (
-        <div className="bg-white/5 border border-white/10 rounded-2xl shadow-lg backdrop-blur-xl overflow-hidden">
+        <div className="bg-white/5 border border-white/10 rounded-2xl shadow-lg backdrop-blur-xl overflow-x-auto">
           <table className="min-w-full text-sm text-left border-collapse">
             <thead className="bg-white/10 text-slate-300">
               <tr>
-                <th className="py-3 px-4 font-semibold">No</th>
-                <th className="py-3 px-4 font-semibold">Nama Siswa</th>
-                <th className="py-3 px-4 font-semibold">NIS</th>
-                <th className="py-3 px-4 font-semibold">Nilai</th>
-                <th className="py-3 px-4 font-semibold">Aksi</th>
+                <th className="py-3 px-4 font-semibold whitespace-nowrap">No</th>
+                <th className="py-3 px-4 font-semibold whitespace-nowrap">Nama Siswa</th>
+                <th className="py-3 px-4 font-semibold whitespace-nowrap">NIS</th>
+                <th className="py-3 px-4 font-semibold whitespace-nowrap">Nilai</th>
+                <th className="py-3 px-4 font-semibold whitespace-nowrap">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -197,7 +197,7 @@ export default function TeacherClassDetail() {
                         onClick={() => handleSubmit(s.id)}
                         className="flex items-center gap-2 bg-sky-500/80 hover:bg-sky-600 text-white px-3 py-1.5 rounded-lg transition"
                       >
-                        <UserPlus className="w-4 h-4" />
+                        <CirclePlus className="w-4 h-4" />
                         Simpan
                       </button>
                     </td>
@@ -215,14 +215,14 @@ export default function TeacherClassDetail() {
         </div>
       ) : (
         <div>
-          <div className="bg-white/5 border border-white/10 rounded-2xl shadow-lg backdrop-blur-xl overflow-hidden">
+          <div className="bg-white/5 border border-white/10 rounded-2xl shadow-lg backdrop-blur-xl overflow-x-auto">
             <table className="min-w-full text-sm text-left border-collapse">
               <thead className="bg-white/10 text-slate-300">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">No</th>
-                  <th className="py-3 px-4 font-semibold">Nama Siswa</th>
-                  <th className="py-3 px-4 font-semibold">NIS</th>
-                  <th className="py-3 px-4 font-semibold">Nilai</th>
+                  <th className="py-3 px-4 font-semibold whitespace-nowrap">No</th>
+                  <th className="py-3 px-4 font-semibold whitespace-nowrap">Nama Siswa</th>
+                  <th className="py-3 px-4 font-semibold whitespace-nowrap">NIS</th>
+                  <th className="py-3 px-4 font-semibold whitespace-nowrap">Nilai</th>
                 </tr>
               </thead>
               <tbody>
