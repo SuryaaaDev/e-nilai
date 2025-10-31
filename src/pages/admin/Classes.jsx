@@ -58,15 +58,15 @@ export default function Classes() {
         return;
       }
 
-      const isDuplicate = kelas.some(
-        (k) =>
-          k.name.toLowerCase() === namaKelas.toLowerCase() &&
-          (!isEditing || k.id !== editId)
-      );
-      if (isDuplicate) {
-        setError("Nama kelas sudah ada!");
-        return;
-      }
+      // const isDuplicate = kelas.some(
+      //   (k) =>
+      //     k.name.toLowerCase() === namaKelas.toLowerCase() &&
+      //     (!isEditing || k.id !== editId)
+      // );
+      // if (isDuplicate) {
+      //   setError("Nama kelas sudah ada!");
+      //   return;
+      // }
 
       if (isEditing) {
         await API.put(`/classes/${editId}`, {
