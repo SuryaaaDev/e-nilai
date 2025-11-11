@@ -13,9 +13,10 @@ import TeacherClasses from "./pages/admin/TeacherClasses";
 import Subjects from "./pages/admin/Subjects";
 
 import TeacherDashboard from "./pages/teacher/Dashboard";
-import NilaiSiswa from "./pages/teacher/NilaiSiswa";
 import TeacherClassDetail from "./pages/teacher/TeacherClassDetail";
 import TeacherProfile from "./pages/teacher/TeacherProfile";
+
+import StudentDashboard from "./pages/student/StudentScores";
 
 export default function App() {
   return (
@@ -49,10 +50,18 @@ export default function App() {
           }
         >
           <Route path="dashboard" element={<TeacherDashboard />} />
-          <Route path="scores" element={<NilaiSiswa />} />
           <Route path="classes/:id" element={<TeacherClassDetail />} />
           <Route path="profile" element={<TeacherProfile />} />
         </Route>
+
+        <Route
+          path="/student/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["student"]}>
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        ></Route>
 
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>

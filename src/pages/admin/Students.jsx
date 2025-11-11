@@ -83,6 +83,7 @@ export default function Students() {
           name: nama,
           class_id: classId,
           email,
+          ...(password ? { password } : {}),
         });
         showSuccess("Data siswa berhasil diperbarui!");
       } else {

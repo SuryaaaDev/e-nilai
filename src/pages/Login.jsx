@@ -31,6 +31,8 @@ export default function Login() {
         navigate("/admin/dashboard");
       } else if (role === "teacher") {
         navigate("/teacher/dashboard");
+      } else if (role === "student") {
+        navigate("/student/dashboard");
       } else {
         navigate("/login");
       }

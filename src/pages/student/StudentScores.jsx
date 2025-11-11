@@ -30,6 +30,20 @@ export default function StudentScores() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+ 
+  useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
@@ -64,19 +78,24 @@ export default function StudentScores() {
     e.preventDefault();
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("Konfirmasi password tidak cocok!");
+      setError("Konfirmasi password tidak cocok!");
       return;
     }
 
     try {
       setIsUpdating(true);
       await API.put("/student/update-password", {
-        oldPassword: passwordData.oldPassword,
+        currentPassword: passwordData.oldPassword,
         newPassword: passwordData.newPassword,
       });
+
       setSuccess("Password berhasil diubah!");
       handleCloseModal();
-      setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+      setPasswordData({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
     } catch (error) {
       console.error("❌ Gagal update password:", error);
       setError(error.response?.data?.message || "Gagal mengubah password.");
@@ -85,18 +104,16 @@ export default function StudentScores() {
     }
   };
 
-  // 🔹 Fungsi untuk menutup modal dengan animasi keluar
   const handleCloseModal = () => {
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
       setShowModal(false);
-    }, 300); // durasi sama dengan animasi CSS
+    }, 300);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 relative">
-      {/* 🔹 Navbar */}
       <header className="bg-slate-900/70 backdrop-blur-md border-b border-white/10 py-4 px-6 md:px-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Award className="text-sky-400" size={28} />
@@ -135,7 +152,7 @@ export default function StudentScores() {
         </p>
 
         {error && (
-          <div className="mb-6">
+          <div className="fixed top-5 right-5 z-50">
             <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl backdrop-blur-md animate-fade-in">
               <AlertTriangle className="w-6 h-6 text-red-400 mt-0.5" />
               <div>
@@ -170,7 +187,9 @@ export default function StudentScores() {
               <thead className="bg-sky-600/80 text-white">
                 <tr>
                   <th className="py-3 px-4 whitespace-nowrap">No</th>
-                  <th className="py-3 px-4 whitespace-nowrap">Mata Pelajaran</th>
+                  <th className="py-3 px-4 whitespace-nowrap">
+                    Mata Pelajaran
+                  </th>
                   <th className="py-3 px-4 whitespace-nowrap">Kelas</th>
                   <th className="py-3 px-4 whitespace-nowrap">Nilai</th>
                 </tr>
@@ -195,9 +214,8 @@ export default function StudentScores() {
         )}
       </main>
 
-      {/* 🔐 Modal Ubah Password */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-end z-50">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-end z-30">
           <div
             className={`bg-slate-900 border border-slate-700 w-full max-w-sm h-full shadow-xl p-6 ${
               isClosing ? "animate-slideRight" : "animate-slideLeft"
@@ -283,7 +301,6 @@ export default function StudentScores() {
         </div>
       )}
 
-      {/* 🔹 Animasi CSS */}
       <style>{`
         @keyframes slideLeft {
           from { transform: translateX(100%); opacity: 0; }
