@@ -42,7 +42,7 @@ export default function StudentScores() {
       return () => clearTimeout(timer);
     }
   }, [error]);
- 
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -127,7 +127,11 @@ export default function StudentScores() {
                 className="flex items-center gap-2 text-slate-300 hover:text-sky-400 transition"
               >
                 <UserCircle2 size={24} />
-                <span className="font-medium">{student.name}</span>
+                <span className="font-medium">
+                  {student.name.length > 10
+                    ? student.name.slice(0, 10) + "..."
+                    : student.name}
+                </span>
               </button>
               <button
                 onClick={handleLogout}

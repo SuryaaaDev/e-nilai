@@ -235,7 +235,7 @@ export default function TeacherClassDetail() {
                       <td className="py-3 px-4">{index + 1}</td>
                       <td className="py-3 px-4">{s.student?.name}</td>
                       <td className="py-3 px-4">{s.student?.nis}</td>
-                      <td className="py-3 px-4">{s.score}</td>
+                      <td className="py-3 px-4 text-sky-300">{s.score}</td>
                     </tr>
                   ))
                 ) : (
